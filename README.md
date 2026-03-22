@@ -2,7 +2,6 @@
 
 **Memora** é um sistema de chat inteligente com memória de longo prazo, utilizando **RAG (Retrieval-Augmented Generation)** para recuperar informações relevantes de conversas anteriores e documentos enviados.
 
-![Memora Demo](https://via.placeholder.com/800x400?text=Memora+Demo)
 
 ---
 
