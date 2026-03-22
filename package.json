@@ -1,0 +1,27 @@
+{
+  "name": "memora",
+  "version": "1.0.0",
+  "description": "Chat com memória de longo prazo usando RAG",
+  "private": true,
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run start:dev --workspace=@memora/backend",
+    "dev:frontend": "npm run dev --workspace=@memora/frontend",
+    "build": "npm run build --workspaces",
+    "build:backend": "npm run build --workspace=@memora/backend",
+    "build:frontend": "npm run build --workspace=@memora/frontend",
+    "build:shared": "npm run build --workspace=shared",
+    "clean": "rm -rf packages/*/node_modules packages/*/dist packages/*/build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
