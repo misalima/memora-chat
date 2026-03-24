@@ -68,6 +68,8 @@ export class LlmService {
     } catch (error) {
       this.logger.error('Azure API error:', error.message);
       return 'Desculpe, estou com problemas técnicos. Tente novamente mais tarde.';
+    } finally {
+      this.logger.log('Finished processing Azure API response');
     }
   }
   private formatHistory(history: string[]): Array<{ role: string; content: string }> {
