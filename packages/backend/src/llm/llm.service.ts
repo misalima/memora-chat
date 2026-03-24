@@ -12,7 +12,7 @@ export class LlmService {
   constructor(private configService: ConfigService) {
     const endpoint = this.configService.get('AZURE_ENDPOINT');
     const token = this.configService.get('AZURE_TOKEN');
-    this.model = this.configService.get('AZURE_MODEL', 'deepseek/DeepSeek-V3-0324');
+    this.model = this.configService.get('AZURE_MODEL', 'openai/gpt-4.1-mini');
 
 
     if (token && token !== 'seu_token_do_github') {
@@ -22,7 +22,7 @@ export class LlmService {
       this.logger.warn('Azure token not configured, using mock mode');
     }
 
-    
+
   }
 
   async generateResponse(userMessage: string, history: string[] = []): Promise<string> {
@@ -48,7 +48,7 @@ export class LlmService {
         },
       ];
 
-      const response = await this.client.path('/chat/completions').post({
+      const apiPromise = this.client.path('/chat/completions').post({
         body: {
           messages,
           temperature: 0.7,
@@ -58,6 +58,16 @@ export class LlmService {
         },
       });
 
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(new Error('TIMEOUT: Azure API não respondeu dentro de 45 segundos'));
+        }, 45000);
+      });
+
+      this.logger.log('Request sent to Azure AI, awaiting response...');
+
+      const response = await Promise.race([apiPromise, timeoutPromise]);
+
       if (isUnexpected(response)) {
         this.logger.error('Azure API error:', response.body.error);
         return 'Desculpe, tive um problema ao processar sua mensagem.';
@@ -66,16 +76,21 @@ export class LlmService {
       const content = response.body.choices[0]?.message?.content;
       return content || 'Desculpe, não consegui gerar uma resposta.';
     } catch (error) {
+      if (error.message && error.message.includes('TIMEOUT')) {
+        this.logger.error('Azure API timeout - resposta muito lenta');
+        return 'A IA está demorando para responder. Tente novamente em alguns instantes.';
+      }
       this.logger.error('Azure API error:', error.message);
       return 'Desculpe, estou com problemas técnicos. Tente novamente mais tarde.';
     } finally {
       this.logger.log('Finished processing Azure API response');
     }
   }
+
   private formatHistory(history: string[]): Array<{ role: string; content: string }> {
 
     const formatted: Array<{ role: string; content: string }> = [];
-    
+
     for (const msg of history) {
       if (msg.startsWith('User:')) {
         formatted.push({
@@ -89,7 +104,7 @@ export class LlmService {
         });
       }
     }
-    
+
     return formatted;
   }
 
