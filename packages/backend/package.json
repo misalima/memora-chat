@@ -20,6 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@azure-rest/ai-inference": "^1.0.0-beta.6",
+    "@azure/core-auth": "^1.10.1",
+    "@azure/core-sse": "^2.3.0",
     "@memora/shared": "*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.3",
