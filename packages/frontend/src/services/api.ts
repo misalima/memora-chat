@@ -23,7 +23,19 @@ api.interceptors.response.use(
     (error) => {
         if (error.code === 'ECONNABORTED' && error.message.includes('timeout')) {
             console.error('Request timeout - a resposta demorou muito');
-            return Promise.reject(new Error('O servidor demorou muito para responder. Tente novamente.'));
+            const timeoutMessage = 'O servidor demorou muito para responder. Tente novamente.';
+
+            // Preserve Axios error shape while providing a user-facing message
+            (error as any).message = timeoutMessage;
+            if (!(error as any).response) {
+                (error as any).response = {};
+            }
+            if (!(error as any).response.data) {
+                (error as any).response.data = {};
+            }
+            (error as any).response.data.message = timeoutMessage;
+
+            return Promise.reject(error);
         }
         return Promise.reject(error);
     }
