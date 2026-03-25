@@ -32,7 +32,13 @@ const ChatPage: React.FC = () => {
 
     useEffect(() => {
         if (currentConversation) {
-            loadMessages(currentConversation);
+            if (messagesCache[currentConversation]) {
+                setMessages(messagesCache[currentConversation]);
+            } else {
+                loadMessages(currentConversation);
+            }
+        } else {
+            setMessages([]);
         }
     }, [currentConversation]);
 
@@ -80,7 +86,7 @@ const ChatPage: React.FC = () => {
         }
     };
 
-    const handleSendMessage = async (e: React.SubmitEvent) => {
+    const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!inputMessage.trim() || sending) return;
 
@@ -94,21 +100,59 @@ const ChatPage: React.FC = () => {
                 conversationId: currentConversation || undefined,
             });
 
+            if (!response) {
+                throw new Error('Resposta vazia do servidor');
+            }
+
+            const userMessage = {
+                id: `temp-${Date.now()}`, // ID temporário
+                role: 'user',
+                content: messageContent, // Conteúdo que o usuário digitou
+                createdAt: new Date().toISOString()
+            };
+
+            const newMessage = {
+                id: response.id,
+                role: 'assistant',
+                content: response.content,
+                createdAt: response.createdAt
+            };
+            const conversationId = response.conversationId;
+
+            if (!conversationId) {
+                throw new Error('ID da conversa não encontrado');
+            }
+
+            if (!newMessage) {
+                throw new Error('Mensagem não encontrada na resposta');
+            }
+
+            if (!newMessage.id || !newMessage.role || !newMessage.content) {
+                console.error('Formato inválido da mensagem:', newMessage);
+                throw new Error('Formato da mensagem inválido');
+            }
+
             if (response.conversationId) {
                 setMessagesCache(prev => ({
                     ...prev,
-                    [response.conversationId]: [
-                        ...(prev[response.conversationId] || []), response.message
+                    [conversationId]: [
+                        ...(prev[conversationId] || []).filter(msg => msg !== undefined),
+                        userMessage, 
+                        newMessage
                     ]
-                }))
+                }));
             }
+
+            setMessages(prev => [
+                ...prev.filter(msg => msg !== undefined),
+                userMessage,
+                newMessage
+            ]);
 
             if (!currentConversation) {
                 setCurrentConversation(response.conversationId);
                 await loadConversations();
             }
-
-            await loadMessages(response.conversationId);
         } catch (error) {
             console.error('Error sending message:', error);
             setInputMessage(messageContent);
@@ -201,8 +245,8 @@ const ChatPage: React.FC = () => {
                             >
                                 <div
                                     className={`max-w-[70%] rounded-lg px-4 py-2 ${msg.role === 'user'
-                                            ? 'bg-indigo-600 text-white'
-                                            : 'bg-white text-gray-800 border'
+                                        ? 'bg-indigo-600 text-white'
+                                        : 'bg-white text-gray-800 border'
                                         }`}
                                 >
                                     <p className="whitespace-pre-wrap">{msg.content}</p>
