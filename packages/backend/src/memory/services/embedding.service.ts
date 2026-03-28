@@ -36,20 +36,28 @@ export class EmbeddingService implements IEmbeddingProvider {
   }
 
   async generateEmbeddings(texts: string[]): Promise<number[][]> {
+    this.logger.log(`[EmbeddingService] Generating embedding for ${texts.length} messages`);
     if (!this.client) {
       this.logger.warn('Using mock embeddings (no Azure token configured)');
       return texts.map(() => this.generateMockEmbedding());
     }
 
     for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+      this.logger.log(`[EmbeddingService] Attempt ${attempt}/${this.maxRetries}`);
       try {
-        const response = await this.client.path('/embeddings').post({
+        const apiPromise = this.client.path('/embeddings').post({
           body: {
             input: texts,
             model: this.model,
             dimensions: Number(this.dimensions),
           },
         });
+
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Embedding API timeout (15s)')), 15_000),
+        );
+
+        const response = await Promise.race([apiPromise, timeoutPromise]);
 
         if (isUnexpected(response)) {
           throw new Error(`Embedding API error: ${JSON.stringify(response.body.error)}`);

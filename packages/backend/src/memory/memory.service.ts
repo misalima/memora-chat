@@ -37,7 +37,7 @@ export class MemoryService {
     this.rollingSummary.checkAndSummarize(conversationId).catch((err) => {
       this.logger.error(`Background summary check failed: ${err.message}`);
     });
-
+    
     // Run all 3 retrieval layers in parallel
     const [recentMessages, relevantMessages, summary] = await Promise.all([
       this.shortTermMemory.getRecentMessages(conversationId),

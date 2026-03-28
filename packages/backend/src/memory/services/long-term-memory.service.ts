@@ -30,6 +30,7 @@ export class LongTermMemoryService {
       // 1. Generate embedding for the current query
       const queryEmbedding = await this.embeddingService.generateEmbedding(query);
 
+      this.logger.log(`[LongTermMemory] Generated embedding for query: ${query}`);
       // 2. Search for similar messages in pgvector
       const results = await this.vectorStoreService.searchSimilar(
         queryEmbedding,

@@ -30,6 +30,7 @@ export class ShortTermMemoryService {
         content: true,
       },
     });
+    
 
     // Reverse to chronological order (was fetched newest-first for the LIMIT)
     return messages.reverse();
