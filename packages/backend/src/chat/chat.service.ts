@@ -2,14 +2,16 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { SendMessageDto } from './dto/send-message.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LlmService } from 'src/llm/llm.service';
+import { MemoryService } from 'src/memory/memory.service';
 
 @Injectable()
 export class ChatService {
-    private readonly logger = new Logger(LlmService.name);
+    private readonly logger = new Logger(ChatService.name);
 
     constructor(
         private prisma: PrismaService, 
-        private llmService: LlmService
+        private llmService: LlmService,
+        private memoryService: MemoryService,
     ) {}
 
     async sendMessage(userId: string, dto: SendMessageDto) {
@@ -23,7 +25,7 @@ export class ChatService {
                 }
             });
             conversationId = newConversation.id;
-            console.log(`New conversation created with ID: ${conversationId}`);
+            this.logger.log(`New conversation created with ID: ${conversationId}`);
         } else {
             const conversation = await this.prisma.conversation.findFirst({
                 where: { id: conversationId, userId }
@@ -34,6 +36,7 @@ export class ChatService {
             }
         }
 
+        // Save user message
         const userMessage = await this.prisma.message.create({
             data: {
                 conversationId,
@@ -44,22 +47,19 @@ export class ChatService {
         });
         this.logger.log('User message created successfully');
 
-
-        const recentMessages = await this.prisma.message.findMany({
-            where: { conversationId },
-            orderBy: { createdAt: 'desc' }, 
-            take: 10,
+        // Persist user message embedding (fire-and-forget)
+        this.memoryService.persistMessage(userMessage.id, dto.content).catch((err) => {
+            this.logger.error(`Failed to persist user embedding: ${err.message}`);
         });
 
-        const historyMessages = recentMessages
-        .reverse()
-        .map(msg => `${msg.role === 'user' ? 'User' : 'System'}: ${msg.content}`);
+        // Build context from all 3 memory layers
+        const context = await this.memoryService.buildContext(conversationId, dto.content);
 
-
-        this.logger.log('Calling LLM api...')
+        // Generate LLM response with full memory context
+        this.logger.log('Calling LLM API with memory context...');
         const responseText = await this.llmService.generateResponse(
             dto.content, 
-            historyMessages
+            context,
         );
 
         const assistantMessage = await this.prisma.message.create({
@@ -69,6 +69,11 @@ export class ChatService {
                 role: 'assistant',
                 content: responseText,
             }
+        });
+
+        // Persist assistant message embedding (fire-and-forget)
+        this.memoryService.persistMessage(assistantMessage.id, responseText).catch((err) => {
+            this.logger.error(`Failed to persist assistant embedding: ${err.message}`);
         });
 
         const messageCount = await this.prisma.message.count({
@@ -134,3 +139,4 @@ export class ChatService {
         }));
     }
 }
+

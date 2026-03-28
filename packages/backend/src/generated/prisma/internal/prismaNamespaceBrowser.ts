@@ -53,7 +53,9 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Conversation: 'Conversation',
-  Message: 'Message'
+  Message: 'Message',
+  MessageEmbedding: 'MessageEmbedding',
+  ConversationSummary: 'ConversationSummary'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -105,6 +107,26 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageEmbeddingScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageEmbeddingScalarFieldEnum = (typeof MessageEmbeddingScalarFieldEnum)[keyof typeof MessageEmbeddingScalarFieldEnum]
+
+
+export const ConversationSummaryScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  summary: 'summary',
+  messagesIncluded: 'messagesIncluded',
+  createdAt: 'createdAt'
+} as const
+
+export type ConversationSummaryScalarFieldEnum = (typeof ConversationSummaryScalarFieldEnum)[keyof typeof ConversationSummaryScalarFieldEnum]
 
 
 export const SortOrder = {

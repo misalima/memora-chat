@@ -2,10 +2,12 @@ generator client {
   provider        = "prisma-client"
   output          = "../src/generated/prisma"
   moduleFormat    = "cjs"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 model User {
@@ -27,8 +29,9 @@ model Conversation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages Message[]
+  user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  summaries ConversationSummary[]
 }
 
 model Message {
@@ -39,6 +42,30 @@ model Message {
   content        String   @db.Text
   createdAt      DateTime @default(now())
 
+  conversation Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  embedding    MessageEmbedding?
+}
+
+model MessageEmbedding {
+  id        String                      @id @default(cuid())
+  messageId String                      @unique
+  embedding Unsupported("vector(1536)")
+  createdAt DateTime                    @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+}
+
+model ConversationSummary {
+  id               String   @id @default(cuid())
+  conversationId   String
+  summary          String   @db.Text
+  messagesIncluded Int
+  createdAt        DateTime @default(now())
+
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
 }

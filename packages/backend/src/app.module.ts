@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
 import { LlmModule } from './llm/llm.module';
+import { MemoryModule } from './memory/memory.module';
 
 
 @Module({
@@ -13,9 +14,10 @@ import { LlmModule } from './llm/llm.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-    }), ChatModule, LlmModule,
+    }), ChatModule, LlmModule, MemoryModule,
   ],
   controllers: [],
   providers: [],
 })
 export class AppModule {}
+

@@ -192,6 +192,7 @@ export type MessageWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  embedding?: Prisma.XOR<Prisma.MessageEmbeddingNullableScalarRelationFilter, Prisma.MessageEmbeddingWhereInput> | null
 }
 
 export type MessageOrderByWithRelationInput = {
@@ -203,6 +204,7 @@ export type MessageOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   conversation?: Prisma.ConversationOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  embedding?: Prisma.MessageEmbeddingOrderByWithRelationInput
 }
 
 export type MessageWhereUniqueInput = Prisma.AtLeast<{
@@ -217,6 +219,7 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  embedding?: Prisma.XOR<Prisma.MessageEmbeddingNullableScalarRelationFilter, Prisma.MessageEmbeddingWhereInput> | null
 }, "id">
 
 export type MessageOrderByWithAggregationInput = {
@@ -250,6 +253,7 @@ export type MessageCreateInput = {
   createdAt?: Date | string
   conversation: Prisma.ConversationCreateNestedOneWithoutMessagesInput
   user: Prisma.UserCreateNestedOneWithoutMessagesInput
+  embedding?: Prisma.MessageEmbeddingCreateNestedOneWithoutMessageInput
 }
 
 export type MessageUncheckedCreateInput = {
@@ -259,6 +263,7 @@ export type MessageUncheckedCreateInput = {
   role: string
   content: string
   createdAt?: Date | string
+  embedding?: Prisma.MessageEmbeddingUncheckedCreateNestedOneWithoutMessageInput
 }
 
 export type MessageUpdateInput = {
@@ -268,6 +273,7 @@ export type MessageUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutMessagesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutMessagesNestedInput
+  embedding?: Prisma.MessageEmbeddingUpdateOneWithoutMessageNestedInput
 }
 
 export type MessageUncheckedUpdateInput = {
@@ -277,6 +283,7 @@ export type MessageUncheckedUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  embedding?: Prisma.MessageEmbeddingUncheckedUpdateOneWithoutMessageNestedInput
 }
 
 export type MessageCreateManyInput = {
@@ -339,6 +346,11 @@ export type MessageMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   content?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type MessageScalarRelationFilter = {
+  is?: Prisma.MessageWhereInput
+  isNot?: Prisma.MessageWhereInput
 }
 
 export type MessageCreateNestedManyWithoutUserInput = {
@@ -425,12 +437,21 @@ export type MessageUncheckedUpdateManyWithoutConversationNestedInput = {
   deleteMany?: Prisma.MessageScalarWhereInput | Prisma.MessageScalarWhereInput[]
 }
 
+export type MessageUpdateOneRequiredWithoutEmbeddingNestedInput = {
+  create?: Prisma.XOR<Prisma.MessageCreateWithoutEmbeddingInput, Prisma.MessageUncheckedCreateWithoutEmbeddingInput>
+  connectOrCreate?: Prisma.MessageCreateOrConnectWithoutEmbeddingInput
+  upsert?: Prisma.MessageUpsertWithoutEmbeddingInput
+  connect?: Prisma.MessageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MessageUpdateToOneWithWhereWithoutEmbeddingInput, Prisma.MessageUpdateWithoutEmbeddingInput>, Prisma.MessageUncheckedUpdateWithoutEmbeddingInput>
+}
+
 export type MessageCreateWithoutUserInput = {
   id?: string
   role: string
   content: string
   createdAt?: Date | string
   conversation: Prisma.ConversationCreateNestedOneWithoutMessagesInput
+  embedding?: Prisma.MessageEmbeddingCreateNestedOneWithoutMessageInput
 }
 
 export type MessageUncheckedCreateWithoutUserInput = {
@@ -439,6 +460,7 @@ export type MessageUncheckedCreateWithoutUserInput = {
   role: string
   content: string
   createdAt?: Date | string
+  embedding?: Prisma.MessageEmbeddingUncheckedCreateNestedOneWithoutMessageInput
 }
 
 export type MessageCreateOrConnectWithoutUserInput = {
@@ -485,6 +507,7 @@ export type MessageCreateWithoutConversationInput = {
   content: string
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMessagesInput
+  embedding?: Prisma.MessageEmbeddingCreateNestedOneWithoutMessageInput
 }
 
 export type MessageUncheckedCreateWithoutConversationInput = {
@@ -493,6 +516,7 @@ export type MessageUncheckedCreateWithoutConversationInput = {
   role: string
   content: string
   createdAt?: Date | string
+  embedding?: Prisma.MessageEmbeddingUncheckedCreateNestedOneWithoutMessageInput
 }
 
 export type MessageCreateOrConnectWithoutConversationInput = {
@@ -521,6 +545,58 @@ export type MessageUpdateManyWithWhereWithoutConversationInput = {
   data: Prisma.XOR<Prisma.MessageUpdateManyMutationInput, Prisma.MessageUncheckedUpdateManyWithoutConversationInput>
 }
 
+export type MessageCreateWithoutEmbeddingInput = {
+  id?: string
+  role: string
+  content: string
+  createdAt?: Date | string
+  conversation: Prisma.ConversationCreateNestedOneWithoutMessagesInput
+  user: Prisma.UserCreateNestedOneWithoutMessagesInput
+}
+
+export type MessageUncheckedCreateWithoutEmbeddingInput = {
+  id?: string
+  conversationId: string
+  userId: string
+  role: string
+  content: string
+  createdAt?: Date | string
+}
+
+export type MessageCreateOrConnectWithoutEmbeddingInput = {
+  where: Prisma.MessageWhereUniqueInput
+  create: Prisma.XOR<Prisma.MessageCreateWithoutEmbeddingInput, Prisma.MessageUncheckedCreateWithoutEmbeddingInput>
+}
+
+export type MessageUpsertWithoutEmbeddingInput = {
+  update: Prisma.XOR<Prisma.MessageUpdateWithoutEmbeddingInput, Prisma.MessageUncheckedUpdateWithoutEmbeddingInput>
+  create: Prisma.XOR<Prisma.MessageCreateWithoutEmbeddingInput, Prisma.MessageUncheckedCreateWithoutEmbeddingInput>
+  where?: Prisma.MessageWhereInput
+}
+
+export type MessageUpdateToOneWithWhereWithoutEmbeddingInput = {
+  where?: Prisma.MessageWhereInput
+  data: Prisma.XOR<Prisma.MessageUpdateWithoutEmbeddingInput, Prisma.MessageUncheckedUpdateWithoutEmbeddingInput>
+}
+
+export type MessageUpdateWithoutEmbeddingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  conversation?: Prisma.ConversationUpdateOneRequiredWithoutMessagesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutMessagesNestedInput
+}
+
+export type MessageUncheckedUpdateWithoutEmbeddingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  conversationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type MessageCreateManyUserInput = {
   id?: string
   conversationId: string
@@ -535,6 +611,7 @@ export type MessageUpdateWithoutUserInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutMessagesNestedInput
+  embedding?: Prisma.MessageEmbeddingUpdateOneWithoutMessageNestedInput
 }
 
 export type MessageUncheckedUpdateWithoutUserInput = {
@@ -543,6 +620,7 @@ export type MessageUncheckedUpdateWithoutUserInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  embedding?: Prisma.MessageEmbeddingUncheckedUpdateOneWithoutMessageNestedInput
 }
 
 export type MessageUncheckedUpdateManyWithoutUserInput = {
@@ -567,6 +645,7 @@ export type MessageUpdateWithoutConversationInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMessagesNestedInput
+  embedding?: Prisma.MessageEmbeddingUpdateOneWithoutMessageNestedInput
 }
 
 export type MessageUncheckedUpdateWithoutConversationInput = {
@@ -575,6 +654,7 @@ export type MessageUncheckedUpdateWithoutConversationInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  embedding?: Prisma.MessageEmbeddingUncheckedUpdateOneWithoutMessageNestedInput
 }
 
 export type MessageUncheckedUpdateManyWithoutConversationInput = {
@@ -596,6 +676,7 @@ export type MessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  embedding?: boolean | Prisma.Message$embeddingArgs<ExtArgs>
 }, ExtArgs["result"]["message"]>
 
 export type MessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -633,6 +714,7 @@ export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type MessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  embedding?: boolean | Prisma.Message$embeddingArgs<ExtArgs>
 }
 export type MessageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
@@ -648,6 +730,7 @@ export type $MessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     conversation: Prisma.$ConversationPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
+    embedding: Prisma.$MessageEmbeddingPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1052,6 +1135,7 @@ export interface Prisma__MessageClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   conversation<T extends Prisma.ConversationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ConversationDefaultArgs<ExtArgs>>): Prisma.Prisma__ConversationClient<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  embedding<T extends Prisma.Message$embeddingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Message$embeddingArgs<ExtArgs>>): Prisma.Prisma__MessageEmbeddingClient<runtime.Types.Result.GetResult<Prisma.$MessageEmbeddingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1485,6 +1569,25 @@ export type MessageDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Messages to delete.
    */
   limit?: number
+}
+
+/**
+ * Message.embedding
+ */
+export type Message$embeddingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MessageEmbedding
+   */
+  select?: Prisma.MessageEmbeddingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MessageEmbedding
+   */
+  omit?: Prisma.MessageEmbeddingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageEmbeddingInclude<ExtArgs> | null
+  where?: Prisma.MessageEmbeddingWhereInput
 }
 
 /**

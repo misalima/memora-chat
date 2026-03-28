@@ -386,7 +386,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Conversation: 'Conversation',
-  Message: 'Message'
+  Message: 'Message',
+  MessageEmbedding: 'MessageEmbedding',
+  ConversationSummary: 'ConversationSummary'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -402,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "conversation" | "message"
+    modelProps: "user" | "conversation" | "message" | "messageEmbedding" | "conversationSummary"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -628,6 +630,138 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MessageEmbedding: {
+      payload: Prisma.$MessageEmbeddingPayload<ExtArgs>
+      fields: Prisma.MessageEmbeddingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MessageEmbeddingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageEmbeddingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MessageEmbeddingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageEmbeddingPayload>
+        }
+        findFirst: {
+          args: Prisma.MessageEmbeddingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageEmbeddingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MessageEmbeddingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageEmbeddingPayload>
+        }
+        findMany: {
+          args: Prisma.MessageEmbeddingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageEmbeddingPayload>[]
+        }
+        delete: {
+          args: Prisma.MessageEmbeddingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageEmbeddingPayload>
+        }
+        update: {
+          args: Prisma.MessageEmbeddingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageEmbeddingPayload>
+        }
+        deleteMany: {
+          args: Prisma.MessageEmbeddingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MessageEmbeddingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MessageEmbeddingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageEmbeddingPayload>[]
+        }
+        aggregate: {
+          args: Prisma.MessageEmbeddingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMessageEmbedding>
+        }
+        groupBy: {
+          args: Prisma.MessageEmbeddingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MessageEmbeddingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MessageEmbeddingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MessageEmbeddingCountAggregateOutputType> | number
+        }
+      }
+    }
+    ConversationSummary: {
+      payload: Prisma.$ConversationSummaryPayload<ExtArgs>
+      fields: Prisma.ConversationSummaryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ConversationSummaryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ConversationSummaryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>
+        }
+        findFirst: {
+          args: Prisma.ConversationSummaryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ConversationSummaryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>
+        }
+        findMany: {
+          args: Prisma.ConversationSummaryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>[]
+        }
+        create: {
+          args: Prisma.ConversationSummaryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>
+        }
+        createMany: {
+          args: Prisma.ConversationSummaryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ConversationSummaryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>[]
+        }
+        delete: {
+          args: Prisma.ConversationSummaryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>
+        }
+        update: {
+          args: Prisma.ConversationSummaryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>
+        }
+        deleteMany: {
+          args: Prisma.ConversationSummaryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ConversationSummaryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ConversationSummaryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>[]
+        }
+        upsert: {
+          args: Prisma.ConversationSummaryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSummaryPayload>
+        }
+        aggregate: {
+          args: Prisma.ConversationSummaryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConversationSummary>
+        }
+        groupBy: {
+          args: Prisma.ConversationSummaryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConversationSummaryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ConversationSummaryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConversationSummaryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -702,6 +836,26 @@ export const MessageScalarFieldEnum = {
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
+export const MessageEmbeddingScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageEmbeddingScalarFieldEnum = (typeof MessageEmbeddingScalarFieldEnum)[keyof typeof MessageEmbeddingScalarFieldEnum]
+
+
+export const ConversationSummaryScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  summary: 'summary',
+  messagesIncluded: 'messagesIncluded',
+  createdAt: 'createdAt'
+} as const
+
+export type ConversationSummaryScalarFieldEnum = (typeof ConversationSummaryScalarFieldEnum)[keyof typeof ConversationSummaryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -763,6 +917,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -863,6 +1031,8 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   conversation?: Prisma.ConversationOmit
   message?: Prisma.MessageOmit
+  messageEmbedding?: Prisma.MessageEmbeddingOmit
+  conversationSummary?: Prisma.ConversationSummaryOmit
 }
 
 /* Types for Logging */

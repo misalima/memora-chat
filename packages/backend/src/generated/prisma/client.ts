@@ -54,3 +54,13 @@ export type Conversation = Prisma.ConversationModel
  * 
  */
 export type Message = Prisma.MessageModel
+/**
+ * Model MessageEmbedding
+ * 
+ */
+export type MessageEmbedding = Prisma.MessageEmbeddingModel
+/**
+ * Model ConversationSummary
+ * 
+ */
+export type ConversationSummary = Prisma.ConversationSummaryModel
